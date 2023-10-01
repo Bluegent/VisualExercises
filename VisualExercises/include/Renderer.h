@@ -18,9 +18,9 @@ private:
     std::mutex mtx;
     uint64_t frameCount;
     const int64_t frameSleepMax;
-
+    const uint32_t reportTime;
 public:
-    Renderer(const sf::Vector2i& size, const std::string& name, const uint32_t frameRate);
+    Renderer(const sf::Vector2i& size, const std::string& name, const uint32_t frameRate = 60U, const uint32_t reportTimeSeconds = 3U);
     Drawables& getDrawables();
     Entities& getEntities();
     void drawFrame();

@@ -2,15 +2,16 @@
 #include <cstdio>
 #include <SFML/Window/Event.hpp>
 
-Renderer::Renderer(const sf::Vector2i& size, const std::string& name, const uint32_t frameRate)
+Renderer::Renderer(const sf::Vector2i& size, const std::string& name, const uint32_t frameRate, const uint32_t reportTimeSeconds)
     : size{ size }
     , window{ sf::VideoMode(size.x,size.y),name }
-    , loopStart{ std::chrono::high_resolution_clock::now() }
-    , updateEnd{ std::chrono::high_resolution_clock::now() }
-    , renderEnd{ std::chrono::high_resolution_clock::now() }
-    , loopEnd{ std::chrono::high_resolution_clock::now() }
+    , loopStart{ std::chrono::steady_clock::now() }
+    , updateEnd{ std::chrono::steady_clock::now() }
+    , renderEnd{ std::chrono::steady_clock::now() }
+    , loopEnd{ std::chrono::steady_clock::now() }
     , frameCount{ 0 }
     , frameSleepMax{ 1000L / frameRate }
+    , reportTime{ reportTimeSeconds * frameRate}
 {
     printf("Sleep max: %lld\n", frameSleepMax);
 }
@@ -33,7 +34,7 @@ void Renderer::drawFrame()
         window.draw(*drawme);
     }
     window.display();
-    renderEnd = std::chrono::high_resolution_clock::now();
+    renderEnd = std::chrono::steady_clock::now();
 }
 
 void Renderer::updateEntities()
@@ -44,7 +45,7 @@ void Renderer::updateEntities()
     {
         entity->update(deltaT);
     }
-    updateEnd = std::chrono::high_resolution_clock::now();
+    updateEnd = std::chrono::steady_clock::now();
 }
 
 void Renderer::handleEvents()
@@ -65,20 +66,19 @@ void Renderer::loop()
     uint64_t loopTime = 0;
     while (window.isOpen())
     {
-        loopStart = std::chrono::high_resolution_clock::now();
+        loopStart = std::chrono::steady_clock::now();
         handleEvents();
         updateEntities();
         drawFrame();
      
         int64_t sleepTime = frameSleepMax - std::chrono::duration_cast<std::chrono::milliseconds>((renderEnd - loopStart)).count();
-
         if (sleepTime > 0)
         {
             std::unique_lock<std::mutex> lock(mtx);
             cv.wait_for(lock, std::chrono::milliseconds(sleepTime));
         }
 
-        loopEnd = std::chrono::high_resolution_clock::now();
+        loopEnd = std::chrono::steady_clock::now();
         calculateAndPrintFrameTimes();
     }
 }
@@ -89,7 +89,7 @@ void Renderer::calculateAndPrintFrameTimes()
     auto renderTime = std::chrono::duration_cast<std::chrono::milliseconds>(renderEnd - updateEnd).count();
     auto updateTime = std::chrono::duration_cast<std::chrono::milliseconds>(updateEnd - loopStart).count();
     ++frameCount;
-    if (frameCount % 60 == 0)
+    if (frameCount % reportTime == 0)
     {
         printf("FR#: %llu UT: %llums RT: %llums LT: %llums\n",frameCount,updateTime,renderTime,loopTime);
     }
