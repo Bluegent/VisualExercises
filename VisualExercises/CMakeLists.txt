@@ -46,7 +46,9 @@ add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
 
 
 install(TARGETS ${PROJECT_NAME}  DESTINATION ${INSTALL_DIR})
-
-if (EXISTS "${INSTALL_DIR}/bin")
-    file(COPY "${INSTALL_DIR}/bin/" DESTINATION ${INSTALL_DIR})
-endif()
+add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+       "${INSTALL_DIR}/bin/"
+       "${INSTALL_DIR}"
+    COMMENT "Copying file after build **************"
+)
