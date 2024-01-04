@@ -7,7 +7,7 @@
 class Entity
 {
 public:
-    virtual void update(const int64_t deltaT) = 0;
+    virtual void update(const float frameRatio) = 0;
 };
 
 using DrawablePtr = std::shared_ptr<sf::Drawable>;

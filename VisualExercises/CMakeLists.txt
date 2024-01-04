@@ -16,6 +16,10 @@ file(GLOB_RECURSE PROJECT_SRC RELATIVE
         src/*.h
         )
 
+#on windows, the resolution of Sleep() is typically 15.6ms, so we need to set a lower resolution for a decent way to limit framerate
+if(WIN32)
+    set(PROJECT_SRC "${PROJECT_SRC};pd/WinSleepUnfucker.hpp;pd/WinSleepUnfucker.cpp")
+endif()
 add_executable(${PROJECT_NAME} ${PROJECT_SRC})
 message("Project Sources: ${PROJECT_SRC}")
 
@@ -30,6 +34,14 @@ include_directories(include ${SFML_INCLUDE_DIR})
 
 # Link the SFML libraries to your executable
 target_link_libraries(${PROJECT_NAME}  sfml-graphics sfml-audio)
+
+#on windows, the resolution of Sleep() is typically 15.6ms, so we need to set a lower resolution for a decent way to limit framerate
+if(WIN32)
+   target_include_directories(${PROJECT_NAME} INTERFACE pd)
+   include_directories(include pd)
+   target_link_libraries(${PROJECT_NAME}  winmm.lib)
+endif()
+
 target_include_directories(${PROJECT_NAME} PRIVATE
     ${SFML_INCLUDE_DIR}
 )

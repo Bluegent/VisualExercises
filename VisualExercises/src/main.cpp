@@ -1,44 +1,52 @@
 #include <Renderer.h>
-#include <SFML/Graphics/RectangleShape.hpp>
+#include <SFML/Graphics.hpp>
+#include <iostream>
+#ifdef _WIN32
+#include <WinSleepUnfucker.hpp>
+#endif //  _WIN32
 
-float arrX[] = { 1.f, 2.f, 4.f, 5.f, 6.f, 6.f, 5.f, 1.f, 0.f, 0.f };
-float arrY[] = { -1.f, 1.f, 1.f, -1.f, 1.f, 4.f, 5.f, 5.f, 4.f, 1.f };
-sf::Vector2f bow[] = { {0.f,0.f},{2.f,1.f},{4.f,0.f},{4.f,2.f},{2.f,1.f},{0.f,2.f} };
 
 class TestEntity : public Entity
 {
 public:
-    std::shared_ptr<sf::RectangleShape> rect;
+    std::shared_ptr<sf::CircleShape> shape;
     float x;
     float y;
+    float radius;
     TestEntity()
-        : rect{ std::make_shared<sf::RectangleShape>(sf::RectangleShape{ {20,20} }) }
-        , x{0.f}
-        , y{0.f}
+        : shape{ std::make_shared<sf::CircleShape>(sf::CircleShape{ 10.0f }) }
+        , x{10.f}
+        , y{10.f}
+        , radius{10.f}
     {
-        rect->setFillColor(sf::Color::Red);
+        shape->setFillColor(sf::Color::Black);
+        shape->setOutlineColor(sf::Color::White);
+        shape->setOutlineThickness(1.f);
+        
     }
-    void update(const int64_t deltaT) override
+    void update(const float frameRatio) override
     {
-        x += 0.5f;
-        y += 0.5f;
-        rect->setPosition(x,y);
+        x += 5.f * frameRatio;
+        shape->setPosition(x,y);
     }
 };
 
 
 int main()
 {
+
+#ifdef _WIN32
+    WinSleepUnfucker unfucker(4);
+#endif //_WIN32
     using namespace std::literals::string_literals;
     //declare the window size
-    sf::Vector2i windowSize(800, 600);
+    sf::Vector2i windowSize(1900, 1000);
 
     Renderer renderer{ windowSize,"VisualExercises"s ,60u};
-    std::shared_ptr<TestEntity> rect = std::make_shared<TestEntity>();
+    std::shared_ptr<TestEntity> shape = std::make_shared<TestEntity>();
 
-    renderer.getDrawables().push_back(rect->rect);
-    renderer.getEntities().push_back(rect);
+    renderer.getDrawables().push_back(shape->shape);
+    renderer.getEntities().push_back(shape);
     renderer.loop();
-
     return 0;
 }
