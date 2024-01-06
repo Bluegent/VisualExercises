@@ -1,7 +1,7 @@
-#include <Renderer.h>
+#include <Game.h>
 #include <cstdio>
 #include <SFML/Window/Event.hpp>
-
+#include <thread>
 
 static float ratio = 0.f;
 static int64_t deltaT = 0;
@@ -16,30 +16,29 @@ Renderer::Renderer(const sf::Vector2i& size, const std::string& name, const uint
     , frameCount{ 0 }
     , frameSleepMax{ 1000L/ frameRate }
     , reportTime{ reportTimeSeconds * frameRate}
+    , entityManager{std::make_shared<EntityManager>()}
+    , drawableManager{std::make_shared<DrawableManager>(window)}
 {
-    frameDurations.reserve(100);
-    renderDurations.reserve(100);
-    sleepTimes.reserve(100);
+    frameDurations.reserve(reportTimeSeconds * 100);
+    renderDurations.reserve(reportTimeSeconds * 100);
+    sleepTimes.reserve(reportTimeSeconds * 100);
     printf("Sleep max: %lld\n", frameSleepMax);
 }
 
-Drawables& Renderer::getDrawables()
+const EntityManagerPtr& Renderer::getEntities()
 {
-    return drawables;
+    return entityManager;
 }
 
-Entities& Renderer::getEntities()
+const DrawableManagerPtr& Renderer::getDrawables()
 {
-    return entities;
+    return drawableManager;
 }
 
 void Renderer::drawFrame()
 {
     window.clear();
-    for (auto drawme : drawables)
-    {
-        window.draw(*drawme);
-    }
+    drawableManager->draw();
     window.display();
     renderEnd = std::chrono::steady_clock::now();
 }
@@ -47,13 +46,9 @@ void Renderer::drawFrame()
 void Renderer::updateEntities()
 {
     deltaT = std::chrono::duration_cast<std::chrono::milliseconds>(loopEnd - lastLoopStart).count();
-
     ratio = static_cast<float>(deltaT) / frameSleepMax;
 
-    for (auto entity : entities)
-    {
-        entity->update(ratio);
-    }
+    entityManager->update(ratio);
     updateEnd = std::chrono::steady_clock::now();
 }
 
@@ -70,13 +65,13 @@ void Renderer::handleEvents()
     }
 }
 
-
-
 void Renderer::loop()
 {
     loopStart = std::chrono::steady_clock::now();
     loopEnd = std::chrono::steady_clock::now();
     lastLoopStart = loopStart;
+    int64_t renderDuration = 0;
+    int64_t sleepTime = 0;
     while (window.isOpen())
     {
         loopStart = std::chrono::steady_clock::now();
@@ -84,14 +79,12 @@ void Renderer::loop()
         updateEntities();
         drawFrame();
      
-        int64_t renderDuration = std::chrono::duration_cast<std::chrono::milliseconds>((renderEnd - loopStart)).count();
-        int64_t sleepTime = frameSleepMax - renderDuration;
+        renderDuration = std::chrono::duration_cast<std::chrono::milliseconds>((renderEnd - loopStart)).count();
+        sleepTime = frameSleepMax - renderDuration;
+        sleepTimes.push_back(sleepTime);
         renderDurations.push_back(renderDuration);
         if (sleepTime > 0)
         {
-            sleepTimes.push_back(sleepTime);
-            //std::unique_lock<std::mutex> lock(mtx);
-            //auto sleepUntil = std::chrono::steady_clock::now() + std::chrono::milliseconds(sleepTime);
             std::this_thread::sleep_for(std::chrono::milliseconds(sleepTime));
         }
         lastLoopStart = loopStart;
@@ -122,6 +115,6 @@ void Renderer::calculateAndPrintFrameTimes()
         frameDurations.clear();
         int64_t sleepAvg = calcAvg(sleepTimes);
         sleepTimes.clear();
-        printf("FR#: %llu r:%lld f:%lld s:%lld \n",frameCount,renderAvg,frameAvg,sleepAvg);
+        printf("FR#: %llu b:%lld + s:%lld =  f:%lld \n",frameCount,renderAvg,sleepAvg, frameAvg);
     }
 }

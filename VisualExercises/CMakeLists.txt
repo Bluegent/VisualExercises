@@ -12,8 +12,10 @@ file(GLOB_RECURSE PROJECT_SRC RELATIVE
         "${CMAKE_CURRENT_SOURCE_DIR}"
         include/*.cpp
         include/*.h
+        include/*.hpp
         src/*.cpp
         src/*.h
+        src/*.hpp
         )
 
 #on windows, the resolution of Sleep() is typically 15.6ms, so we need to set a lower resolution for a decent way to limit framerate
