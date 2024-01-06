@@ -4,6 +4,7 @@
 #include <memory>
 #include <SFML/Graphics/Drawable.hpp>
 
+class DrawableManager;
 class EntityManager;
 using EntityId = uint32_t;
 using DrawablePtr = std::shared_ptr<sf::Drawable>;
@@ -15,7 +16,8 @@ protected:
 
 public:
     virtual void update(const float frameRatio) = 0;
-    virtual void setManager(const std::shared_ptr<EntityManager>& manager) = 0;
+    virtual void setManager(const std::shared_ptr<EntityManager>& manager) {}
+    virtual void setDrawableManager(const std::shared_ptr<DrawableManager>& manager) {}
     virtual const DrawablePtr getDrawable() const
     {
         return {};

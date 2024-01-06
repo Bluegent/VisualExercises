@@ -71,7 +71,7 @@ public:
             return;
         }
 
-        velocity += 0.3 * frameRatio;
+        velocity += 0.3f * frameRatio;
         y += velocity * frameRatio;
 
         shape->setPosition(x, y);
@@ -90,15 +90,6 @@ public:
         return shape;
     }
 
-
-    virtual void setManager(const std::shared_ptr<EntityManager>& manager)
-    {
-
-    }
-    virtual const DrawablePtr getDrawable() const
-    {
-        return shape;
-    }
 };
 
 

@@ -19,9 +19,9 @@ Renderer::Renderer(const sf::Vector2i& size, const std::string& name, const uint
     , entityManager{std::make_shared<EntityManager>()}
     , drawableManager{std::make_shared<DrawableManager>(window)}
 {
-    frameDurations.reserve(reportTimeSeconds * 100);
-    renderDurations.reserve(reportTimeSeconds * 100);
-    sleepTimes.reserve(reportTimeSeconds * 100);
+    frameDurations.reserve(reportTimeSeconds * 100u);
+    renderDurations.reserve(reportTimeSeconds * 100u);
+    sleepTimes.reserve(reportTimeSeconds * 100u);
     printf("Sleep max: %lld\n", frameSleepMax);
 }
 
