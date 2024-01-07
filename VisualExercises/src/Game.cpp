@@ -2,7 +2,7 @@
 #include <cstdio>
 #include <SFML/Window/Event.hpp>
 #include <thread>
-
+#include <Helper/Log.hpp>
 
 namespace ve
 {
@@ -18,7 +18,7 @@ namespace ve
         entity->setManager(entityManager);
     }
 
-    Renderer::Renderer(const sf::Vector2i& size, const std::string& name, const uint32_t frameRate, const uint32_t reportTimeSeconds)
+    Renderer::Renderer(const sf::Vector2i& size, const std::string& name, const uint32_t frameRate, const uint64_t reportTimeSeconds)
         : size{ size }
         , window{ sf::VideoMode(size.x,size.y),name }
         , loopStart{ std::chrono::steady_clock::now() }
@@ -34,7 +34,7 @@ namespace ve
         frameDurations.reserve(reportTimeSeconds * 100u);
         renderDurations.reserve(reportTimeSeconds * 100u);
         sleepTimes.reserve(reportTimeSeconds * 100u);
-        printf("Sleep max: %lld\n", frameSleepMax);
+        LOG_INFO("Sleep max: %lld", frameSleepMax);
     }
 
     const EntityManagerPtr& Renderer::getEntities()
@@ -127,7 +127,7 @@ namespace ve
             frameDurations.clear();
             int64_t sleepAvg = calcAvg(sleepTimes);
             sleepTimes.clear();
-            printf("FR#: %llu b:%lld + s:%lld =  f:%lld d:%lld u:%lld\n", frameCount, renderAvg, sleepAvg, frameAvg,drawableManager->getDrawablesCount(),entityManager->getEntityCount());
+            LOG_DEBUG("FR#: %llu b:%lld + s:%lld =  f:%lld d:%lld u:%lld", frameCount, renderAvg, sleepAvg, frameAvg,drawableManager->getDrawablesCount(),entityManager->getEntityCount());
         }
     }
 }

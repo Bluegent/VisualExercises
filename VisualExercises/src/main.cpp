@@ -109,12 +109,12 @@ int main()
 
     ve::Renderer renderer{ windowSize,"VisualExercises"s , constants::frameRate };
 
+    auto spawner = std::make_shared<ve::SparklerSpawner>(sf::Vector2f(constants::width / 2, constants::height / 2));
+    spawner->setDrawableManager(renderer.getDrawables());
+    spawner->setManager(renderer.getEntities());
+    renderer.getEntities()->add(spawner);
 
-
-    //std::shared_ptr<TestEntity> shape = std::make_shared<TestEntity>();
-    std::shared_ptr<ve::Sparkler> spark = std::make_shared<ve::Sparkler>(sf::Vector2f(constants::width/2,constants::height/2),300,180.f,true);
-
-    renderer.addDrawableEntity(spark);
+    
     renderer.loop();
     return 0;
 }

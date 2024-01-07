@@ -1,10 +1,12 @@
 #pragma once
 #include <Entity.h>
 #include <SFML/Graphics/RectangleShape.hpp>
+#include <Helper/Math.hpp>
+#include <random>
 
 namespace ve
 {
-    class Sparkler : public Entity
+    class Sparkler : public DrawableEntity
     {
     private:
         std::shared_ptr<sf::RectangleShape> shape;
@@ -12,10 +14,9 @@ namespace ve
         sf::Vector2f origin;
         float length;
         const float targetLength;
-        std::shared_ptr<EntityManager> entityManager;
-        std::shared_ptr<DrawableManager> drawableManager;
         bool spawnChild;
         sf::Color color;
+        float angle;
 
     public:
         Sparkler(const sf::Vector2f& origin, const float targetLength, float angle, bool spawnChild = false)
@@ -24,12 +25,13 @@ namespace ve
             , length{ 0.f }
             , targetLength{ targetLength }
             , spawnChild{ spawnChild }
-            , color{ sf::Color::White }
+            , color{ sf::Color::White}
             , drawable{std::make_shared<Drawable>(shape)}
+            , angle{angle}
         {
             shape->setPosition(origin);
             shape->setFillColor(color);
-            shape->setRotation(angle);
+            shape->setRotation(angle-90.f);
 
         }
 
@@ -39,15 +41,16 @@ namespace ve
             {
                 if (color.a >= 10u)
                 {
-                    color.a -= 3.f * frameRatio;
+                    color.a -= 15.f * frameRatio;
                     shape->setFillColor(color);
                 }
                 else
                 {
                     color.a = 0;
+
                     shape->setFillColor(color);
 
-                    entityManager->remove(id);
+                    manager->remove(id);
                     drawableManager->remove(drawable->getId());
                 }
                 return;
@@ -59,16 +62,23 @@ namespace ve
             if (spawnChild && length >= targetLength)
             {
 
-                std::shared_ptr<Sparkler> childSpark1 = std::make_shared<Sparkler>(sf::Vector2f(origin.x, origin.y - shape->getSize().y), 50, shape->getRotation() + 45.f);
-                std::shared_ptr<Sparkler> childSpark2 = std::make_shared<Sparkler>(sf::Vector2f(origin.x, origin.y - shape->getSize().y), 50, shape->getRotation() - 45.f);
-                entityManager->add(childSpark1);
-                entityManager->add(childSpark2);
-                drawableManager->add(childSpark1->getDrawable());
-                drawableManager->add(childSpark2->getDrawable());
-                childSpark1->setDrawableManager(drawableManager);
-                childSpark2->setDrawableManager(drawableManager);
-                childSpark1->setManager(entityManager);
-                childSpark2->setManager(entityManager);
+                float angleInRadians = toRadians(angle);
+                sf::Vector2f childOrigin;
+                float currentLength = shape->getSize().y;
+                childOrigin.x = origin.x + cos(angleInRadians) * currentLength;
+                childOrigin.y = origin.y + sin(angleInRadians) * currentLength;
+
+                int32_t childCount = getRandom(2, 5);
+                for (int32_t i = 0; i < childCount; ++i)
+                {
+                    std::shared_ptr<Sparkler> childSpark = std::make_shared<Sparkler>(childOrigin, getRandomF(10.f,50.f), angle + getRandomF(-90.f,90.f));
+                    manager->add(childSpark);
+                    drawableManager->add(childSpark->getDrawable());
+                    childSpark->setDrawableManager(drawableManager);
+                    childSpark->setManager(manager);
+                }
+
+     
 
             }
         }
@@ -78,19 +88,40 @@ namespace ve
             return drawable;
         }
 
-        virtual void setManager(const std::shared_ptr<EntityManager>& manager)
+    };
+
+    class SparklerSpawner : public DrawableEntity
+    {
+    private:
+        sf::Vector2f origin;
+        float counter;
+    public:
+        SparklerSpawner(const sf::Vector2f& origin)
+            : origin{ origin }
+            , counter{0.f}
         {
-            entityManager = manager;
+
         }
 
-        virtual void setDrawableManager(const std::shared_ptr<DrawableManager>& manager)
+        void update(const float tickRatio)
         {
-            drawableManager = manager;
-        }
+            counter += tickRatio;
+            if (counter >= 1.f)
+            {
+                counter = 0.f;
+                int32_t childCount = getRandom(3, 10);
+                for (int32_t i = 0; i < childCount; ++i)
+                {
+                    std::shared_ptr<Sparkler> childSpark = std::make_shared<Sparkler>(origin, getRandomF(10.f, 350.f), getRandomF(0.f, 360.f), true);
+                    manager->add(childSpark);
+                    childSpark->setManager(manager);
 
-        ~Sparkler()
-        {
+                    drawableManager->add(childSpark->getDrawable());
+                    childSpark->setDrawableManager(drawableManager);
+                }
+            }
         }
 
     };
+
 }

@@ -4,6 +4,7 @@
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <chrono>
 
+
 namespace ve
 {
 
@@ -21,7 +22,7 @@ namespace ve
 
         uint64_t frameCount;
         const int64_t frameSleepMax;
-        const uint32_t reportTime;
+        const uint64_t reportTime;
         std::vector <int64_t> frameDurations;
         std::vector <int64_t> renderDurations;
         std::vector <int64_t> sleepTimes;
@@ -32,7 +33,7 @@ namespace ve
 
 
     public:
-        Renderer(const sf::Vector2i& size, const std::string& name, const uint32_t frameRate = 60U, const uint32_t reportTimeSeconds = 2U);
+        Renderer(const sf::Vector2i& size, const std::string& name, const uint32_t frameRate = 60U, const uint64_t reportTimeSeconds = 2U);
         const EntityManagerPtr& getEntities();
         const DrawableManagerPtr& getDrawables();
         void drawFrame();

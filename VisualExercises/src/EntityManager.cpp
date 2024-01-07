@@ -1,5 +1,7 @@
 #include <EntityManager.h>
 #include <cstdio>
+#include <Helper/Log.hpp>
+
 namespace ve
 {
 
@@ -38,7 +40,7 @@ namespace ve
     {
         for (const auto id : removals)
         {
-            printf("Update: Removing entity %d\n", id);
+            //LOG_DEBUG("Update: Removing entity %d", id);
             entities.erase(id);
         }
         removals.clear();

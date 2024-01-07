@@ -1,4 +1,5 @@
 #include <DrawableManager.hpp>
+#include <Helper/Log.hpp>
 
 namespace ve
 {
@@ -22,7 +23,7 @@ namespace ve
             if (layer.second.find(id) != layer.second.end())
             {
                 layer.second.erase(id);
-                printf("Draw: Removing entity %d\n", id);
+                //LOG_DEBUG("Draw: Removing entity %d", id);
                 break;
             }
         }
