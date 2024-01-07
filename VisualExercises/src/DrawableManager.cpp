@@ -22,6 +22,7 @@ namespace ve
             if (layer.second.find(id) != layer.second.end())
             {
                 layer.second.erase(id);
+                printf("Draw: Removing entity %d\n", id);
                 break;
             }
         }
@@ -41,13 +42,25 @@ namespace ve
 
     void DrawableManager::draw()
     {
+        uint32_t drawCount = 0;
         for (const auto& layer : layers)
         {
+            drawCount += layer.second.size();
             for (const auto& drawable : layer.second)
             {
                 window.draw(*drawable.second->getSfDrawable());
             }
         }
+    }
+
+    size_t DrawableManager::getDrawablesCount()
+    {
+        size_t count = 0;
+        for (const auto& layer : layers)
+        {
+            count += layer.second.size();
+        }
+        return count;
     }
 
 }

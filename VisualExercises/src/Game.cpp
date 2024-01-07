@@ -127,7 +127,7 @@ namespace ve
             frameDurations.clear();
             int64_t sleepAvg = calcAvg(sleepTimes);
             sleepTimes.clear();
-            printf("FR#: %llu b:%lld + s:%lld =  f:%lld \n", frameCount, renderAvg, sleepAvg, frameAvg);
+            printf("FR#: %llu b:%lld + s:%lld =  f:%lld d:%lld u:%lld\n", frameCount, renderAvg, sleepAvg, frameAvg,drawableManager->getDrawablesCount(),entityManager->getEntityCount());
         }
     }
 }

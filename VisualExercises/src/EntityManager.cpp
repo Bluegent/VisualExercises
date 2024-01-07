@@ -1,5 +1,5 @@
 #include <EntityManager.h>
-
+#include <cstdio>
 namespace ve
 {
 
@@ -17,7 +17,7 @@ namespace ve
 
     void EntityManager::remove(const Id id)
     {
-        entities.erase(id);
+        removals.push_back(id);       
     }
 
     void EntityManager::update(const float tickRatio)
@@ -26,10 +26,25 @@ namespace ve
         {
             entity.second->update(tickRatio);
         }
+        removePass();
+        
     }
 
     const Entities& EntityManager::getEntities() const
     {
         return entities;
+    }
+    void EntityManager::removePass()
+    {
+        for (const auto id : removals)
+        {
+            printf("Update: Removing entity %d\n", id);
+            entities.erase(id);
+        }
+        removals.clear();
+    }
+    size_t EntityManager::getEntityCount()
+    {
+        return entities.size();
     }
 }

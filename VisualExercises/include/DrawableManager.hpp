@@ -22,6 +22,7 @@ namespace ve
         void remove(const Id id);
         void remove(const Id id, const ZIndex zIndex);
         void draw();
+        size_t getDrawablesCount();
     };
 
     using DrawableManagerPtr = std::shared_ptr<DrawableManager>;

@@ -1,7 +1,7 @@
 #pragma once
 #include <Entity.h>
 #include <unordered_map>
-
+#include <vector>
 
 namespace ve
 {
@@ -11,6 +11,7 @@ namespace ve
     {
     private:
         Entities entities;
+        std::vector<Id> removals;
         Id idGenerator;
     public:
         EntityManager();
@@ -18,6 +19,8 @@ namespace ve
         void remove(const Id id);
         void update(const float tickRatio);
         const Entities& getEntities() const;
+        void removePass();
+        size_t getEntityCount();
 
     };
 
