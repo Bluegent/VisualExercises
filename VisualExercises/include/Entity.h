@@ -2,34 +2,36 @@
 #include <cstdint>
 #include <vector>
 #include <memory>
-#include <SFML/Graphics/Drawable.hpp>
+#include <Engine/Drawable.hpp>
 
-class DrawableManager;
-class EntityManager;
-using EntityId = uint32_t;
-using DrawablePtr = std::shared_ptr<sf::Drawable>;
 
-class Entity
+namespace ve
 {
-protected:
-    EntityId id;
+    class DrawableManager;
+    class EntityManager;
 
-public:
-    virtual void update(const float frameRatio) = 0;
-    virtual void setManager(const std::shared_ptr<EntityManager>& manager) {}
-    virtual void setDrawableManager(const std::shared_ptr<DrawableManager>& manager) {}
-    virtual const DrawablePtr getDrawable() const
+    class Entity
     {
-        return {};
-    }
-    virtual EntityId getId() const
-    {
-        return id;
-    }
-    virtual void setId(const EntityId id)
-    {
-        this->id = id;
-    }
-};
+    protected:
+        Id id;
 
-using EntityPtr = std::shared_ptr<Entity>;
+    public:
+        virtual void update(const float frameRatio) = 0;
+        virtual void setManager(const std::shared_ptr<EntityManager>& manager) {}
+        virtual void setDrawableManager(const std::shared_ptr<DrawableManager>& manager) {}
+        virtual const DrawablePtr getDrawable() const
+        {
+            return {};
+        }
+        virtual Id getId() const
+        {
+            return id;
+        }
+        virtual void setId(const Id id)
+        {
+            this->id = id;
+        }
+    };
+
+    using EntityPtr = std::shared_ptr<Entity>;
+}

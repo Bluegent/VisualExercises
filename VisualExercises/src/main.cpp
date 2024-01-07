@@ -3,6 +3,8 @@
 #include <iostream>
 #ifdef _WIN32
 #include <WinSleepUnfucker.hpp>
+#include "Sparkler.hpp"
+
 #endif //  _WIN32
 
 namespace constants
@@ -12,7 +14,7 @@ namespace constants
     const uint32_t frameRate = 60u;
 }
 
-class TestEntity : public Entity
+class TestEntity : public ve::Entity
 {
 private:
     std::shared_ptr<sf::CircleShape> shape;
@@ -105,14 +107,14 @@ int main()
 
     sf::Vector2i windowSize(constants::width, constants::height);
 
-    Renderer renderer{ windowSize,"VisualExercises"s , constants::frameRate };
+    ve::Renderer renderer{ windowSize,"VisualExercises"s , constants::frameRate };
 
 
 
-    std::shared_ptr<TestEntity> shape = std::make_shared<TestEntity>();
+    //std::shared_ptr<TestEntity> shape = std::make_shared<TestEntity>();
+    std::shared_ptr<ve::Sparkler> spark = std::make_shared<ve::Sparkler>(sf::Vector2f(constants::width/2,constants::height/2),300,180.f,true);
 
-    renderer.getEntities()->add(shape);
-    renderer.getDrawables()->add(shape->getDrawable());
+    renderer.addDrawableEntity(spark);
     renderer.loop();
     return 0;
 }

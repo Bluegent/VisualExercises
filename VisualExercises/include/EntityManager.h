@@ -2,20 +2,24 @@
 #include <Entity.h>
 #include <unordered_map>
 
-using Entities = std::unordered_map<EntityId, EntityPtr>;
 
-class EntityManager
+namespace ve
 {
-private:
-    Entities entities;
-    EntityId idGenerator;
-public:
-    EntityManager();
-    void add(const EntityPtr& entity);
-    void remove(const EntityId id);
-    void update(const float tickRatio);
-    const Entities& getEntities() const;
+    using Entities = std::unordered_map<Id, EntityPtr>;
 
-};
+    class EntityManager
+    {
+    private:
+        Entities entities;
+        Id idGenerator;
+    public:
+        EntityManager();
+        void add(const EntityPtr& entity);
+        void remove(const Id id);
+        void update(const float tickRatio);
+        const Entities& getEntities() const;
 
-using EntityManagerPtr = std::shared_ptr<EntityManager>;
+    };
+
+    using EntityManagerPtr = std::shared_ptr<EntityManager>;
+}
