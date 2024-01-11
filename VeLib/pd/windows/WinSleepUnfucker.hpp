@@ -1,11 +1,17 @@
 #pragma once
 #include <stdint.h>
 
-class WinSleepUnfucker
+namespace ve
 {
-private:
-    const int32_t sleepResolution;
-public:
-    WinSleepUnfucker(const int32_t sleepResolution);
-    ~WinSleepUnfucker();
-};
+    class WinSleepUnfucker
+    {
+    private:
+        int32_t sleepResolution;
+        bool wasFixed;
+    public:
+        WinSleepUnfucker(const int32_t resolution = 16);
+        void fix(const int32_t resolution);
+        void unfix();
+        ~WinSleepUnfucker();
+    };
+}
