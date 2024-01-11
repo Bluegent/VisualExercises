@@ -56,7 +56,7 @@ namespace ve
                 return;
             }
 
-            length += 30.f * frameRatio;
+            length += 0.5f * frameRatio;
             shape->setSize(sf::Vector2f(2, length));
 
             if (spawnChild && length >= targetLength)
@@ -68,10 +68,10 @@ namespace ve
                 childOrigin.x = origin.x + cos(angleInRadians) * currentLength;
                 childOrigin.y = origin.y + sin(angleInRadians) * currentLength;
 
-                int32_t childCount = getRandom(2, 5);
+                int32_t childCount = getRandom(2, 8);
                 for (int32_t i = 0; i < childCount; ++i)
                 {
-                    std::shared_ptr<Sparkler> childSpark = std::make_shared<Sparkler>(childOrigin, getRandomF(10.f,50.f), angle + getRandomF(-90.f,90.f));
+                    std::shared_ptr<Sparkler> childSpark = std::make_shared<Sparkler>(childOrigin, getRandomF(10.f,50.f), angle + getRandomF(-180.f,180.f));
                     manager->add(childSpark);
                     drawableManager->add(childSpark->getDrawable());
                     childSpark->setDrawableManager(drawableManager);
@@ -106,13 +106,15 @@ namespace ve
         void update(const float tickRatio)
         {
             counter += tickRatio;
+            origin.y += 0.9f * tickRatio;
+            std::vector<int> a;
             if (counter >= 1.f)
             {
                 counter = 0.f;
-                int32_t childCount = getRandom(3, 10);
+                int32_t childCount = getRandom(3, 5);
                 for (int32_t i = 0; i < childCount; ++i)
                 {
-                    std::shared_ptr<Sparkler> childSpark = std::make_shared<Sparkler>(origin, getRandomF(10.f, 350.f), getRandomF(0.f, 360.f), true);
+                    std::shared_ptr<Sparkler> childSpark = std::make_shared<Sparkler>(origin, getRandomF(10.f, 350.f), getRandomF(45.f, -225.f), true);
                     manager->add(childSpark);
                     childSpark->setManager(manager);
 

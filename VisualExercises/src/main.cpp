@@ -109,7 +109,7 @@ int main()
 
     ve::Renderer renderer{ windowSize,"VisualExercises"s , constants::frameRate };
 
-    auto spawner = std::make_shared<ve::SparklerSpawner>(sf::Vector2f(constants::width / 2, constants::height / 2));
+    auto spawner = std::make_shared<ve::SparklerSpawner>(sf::Vector2f(constants::width / 2, constants::height / 2-500));
     spawner->setDrawableManager(renderer.getDrawables());
     spawner->setManager(renderer.getEntities());
     renderer.getEntities()->add(spawner);
