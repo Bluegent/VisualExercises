@@ -1,9 +1,9 @@
-#include <Game.hpp>
+#include <ve/Engine/Game.hpp>
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #ifdef _WIN32
 #include <WinSleepUnfucker.hpp>
-#include "Sparkler.hpp"
+#include "TestEntities/Sparkler.hpp"
 
 #endif //  _WIN32
 

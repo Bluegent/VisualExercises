@@ -1,6 +1,6 @@
-#include <EntityManager.hpp>
+#include <ve/Engine/EntityManager.hpp>
 #include <cstdio>
-#include <Helper/Log.hpp>
+#include <ve/Helper/Log.hpp>
 
 namespace ve
 {

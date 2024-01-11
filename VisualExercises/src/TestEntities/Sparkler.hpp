@@ -1,7 +1,7 @@
 #pragma once
-#include <Entity.hpp>
+#include <ve/Engine/Entity.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
-#include <Helper/Math.hpp>
+#include <ve/Helper/Math.hpp>
 #include <random>
 
 namespace ve

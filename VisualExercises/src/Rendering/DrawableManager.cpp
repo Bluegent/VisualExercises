@@ -1,5 +1,5 @@
-#include <DrawableManager.hpp>
-#include <Helper/Log.hpp>
+#include <ve/Rendering/DrawableManager.hpp>
+#include <ve/Helper/Log.hpp>
 
 namespace ve
 {

@@ -1,6 +1,6 @@
 #pragma once
-#include <EntityManager.hpp>
-#include <DrawableManager.hpp>
+#include <ve/Engine/EntityManager.hpp>
+#include <ve/Rendering/DrawableManager.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <chrono>
 

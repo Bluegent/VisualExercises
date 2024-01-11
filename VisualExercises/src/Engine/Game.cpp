@@ -1,8 +1,8 @@
-#include <Game.hpp>
+#include <ve/Engine/Game.hpp>
 #include <cstdio>
 #include <SFML/Window/Event.hpp>
 #include <thread>
-#include <Helper/Log.hpp>
+#include <ve/Helper/Log.hpp>
 
 namespace ve
 {
