@@ -1,4 +1,4 @@
-#include <Game.h>
+#include <Game.hpp>
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #ifdef _WIN32

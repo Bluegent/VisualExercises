@@ -1,5 +1,5 @@
 #pragma once
-#include <Entity.h>
+#include <Entity.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <Helper/Math.hpp>
 #include <random>

@@ -1,5 +1,5 @@
 #pragma once
-#include <EntityManager.h>
+#include <EntityManager.hpp>
 #include <DrawableManager.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <chrono>
