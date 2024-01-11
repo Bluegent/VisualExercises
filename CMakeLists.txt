@@ -17,7 +17,6 @@ add_subdirectory(SFML)
 add_subdirectory(VeLib)
 add_subdirectory(VisualExercises)
 
-#[[
 SET(CATEST_CHECKOUT "${CMAKE_CURRENT_SOURCE_DIR}/Catest")
 if(NOT EXISTS "${CATEST_CHECKOUT}/Catest")
 execute_process(
@@ -27,4 +26,4 @@ endif()
 
 add_subdirectory(Catest)
 add_subdirectory(Test)
-]]
+
