@@ -56,7 +56,7 @@ namespace ve
                 return;
             }
 
-            length += 0.5f * frameRatio;
+            length += 15.f * frameRatio;
             shape->setSize(sf::Vector2f(2, length));
 
             if (spawnChild && length >= targetLength)

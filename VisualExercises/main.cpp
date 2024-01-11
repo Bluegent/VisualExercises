@@ -1,11 +1,12 @@
 #include <ve/Engine/Game.hpp>
 #include <SFML/Graphics.hpp>
 #include <iostream>
-#ifdef _WIN32
-#include <WinSleepUnfucker.hpp>
-#include "TestEntities/Sparkler.hpp"
 
+#ifdef _WIN32
+    #include <windows/WinSleepUnfucker.hpp>
 #endif //  _WIN32
+
+#include "src/Sparkler.hpp"
 
 namespace constants
 {

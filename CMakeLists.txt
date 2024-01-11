@@ -14,4 +14,17 @@ message("Install dir: ${INSTALL_DIR}")
 set(CMAKE_CXX_STANDARD 14)
 
 add_subdirectory(SFML)
+add_subdirectory(VeLib)
 add_subdirectory(VisualExercises)
+
+#[[
+SET(CATEST_CHECKOUT "${CMAKE_CURRENT_SOURCE_DIR}/Catest")
+if(NOT EXISTS "${CATEST_CHECKOUT}/Catest")
+execute_process(
+    COMMAND git clone --depth 1 https://github.com/Bluegent/Catest.git "${CATEST_CHECKOUT}"
+)
+endif()
+
+add_subdirectory(Catest)
+add_subdirectory(Test)
+]]

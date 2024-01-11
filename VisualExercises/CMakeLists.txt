@@ -1,27 +1,15 @@
 project(VisualExercises)
 
-# Set the path to the directory containing SFMLConfig.cmake (modify this path as needed)
-#set(SFML_DIR "${INSTALL_DIR}/lib/cmake/SFML")
-SET(SFML_INCLUDE_DIR "${INSTALL_DIR}/include")
-
-# Find the SFML library
-#find_package(SFML 2.6.0 COMPONENTS graphics audio REQUIRED)
-
 # Add your source files from the source folder
 file(GLOB_RECURSE PROJECT_SRC RELATIVE
         "${CMAKE_CURRENT_SOURCE_DIR}"
         include/*.cpp
-        include/*.h
         include/*.hpp
         src/*.cpp
-        src/*.h
         src/*.hpp
+        main.cpp
         )
 
-#on windows, the resolution of Sleep() is typically 15.6ms, so we need to set a lower resolution for a decent way to limit framerate
-if(WIN32)
-    set(PROJECT_SRC "${PROJECT_SRC};pd/WinSleepUnfucker.hpp;pd/WinSleepUnfucker.cpp")
-endif()
 add_executable(${PROJECT_NAME} ${PROJECT_SRC})
 message("Project Sources: ${PROJECT_SRC}")
 
@@ -32,23 +20,10 @@ foreach(source IN LISTS PROJECT_SRC)
 endforeach()  
 
 target_include_directories(${PROJECT_NAME} INTERFACE include)
-include_directories(include ${SFML_INCLUDE_DIR})
+include_directories(include)
 
 # Link the SFML libraries to your executable
-target_link_libraries(${PROJECT_NAME}  sfml-graphics sfml-audio)
-
-#on windows, the resolution of Sleep() is typically 15.6ms, so we need to set a lower resolution for a decent way to limit framerate
-if(WIN32)
-   target_include_directories(${PROJECT_NAME} INTERFACE pd)
-   include_directories(include pd)
-   target_link_libraries(${PROJECT_NAME}  winmm.lib)
-endif()
-
-target_include_directories(${PROJECT_NAME} PRIVATE
-    ${SFML_INCLUDE_DIR}
-)
-
-message("SFML include dir: ${SFML_INCLUDE_DIR}")
+target_link_libraries(${PROJECT_NAME}  VeLib)
 
 set_target_properties(${PROJECT_NAME}  PROPERTIES
     VS_DEBUGGER_COMMAND "${INSTALL_DIR}/${PROJECT_NAME}.exe"
@@ -57,7 +32,6 @@ set_target_properties(${PROJECT_NAME}  PROPERTIES
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
     COMMAND ${CMAKE_COMMAND} --install ${CMAKE_BINARY_DIR} --config $<CONFIG>
 )
-
 
 install(TARGETS ${PROJECT_NAME}  DESTINATION ${INSTALL_DIR})
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
