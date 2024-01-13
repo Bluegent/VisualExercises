@@ -17,13 +17,19 @@ add_subdirectory(SFML)
 add_subdirectory(VeLib)
 add_subdirectory(VisualExercises)
 
-SET(CATEST_CHECKOUT "${CMAKE_CURRENT_SOURCE_DIR}/Catest")
-if(NOT EXISTS "${CATEST_CHECKOUT}/Catest")
+# Set the output directory for the test executable
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${INSTALL_DIR}")
+
+SET(GTEST_CHECKOUT "${CMAKE_CURRENT_SOURCE_DIR}/gtest")
+if(NOT EXISTS "${GTEST_CHECKOUT}/googletest")
 execute_process(
-    COMMAND git clone --depth 1 https://github.com/Bluegent/Catest.git "${CATEST_CHECKOUT}"
+    COMMAND git clone --depth 1 --branch v1.14.x https://github.com/google/googletest.git "${GTEST_CHECKOUT}"
 )
 endif()
 
-add_subdirectory(Catest)
+# For Windows: Prevent overriding the parent project's compiler/linker settings
+set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+
+add_subdirectory(gtest)
 add_subdirectory(Test)
 

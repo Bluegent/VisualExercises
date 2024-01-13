@@ -1,9 +1,9 @@
-#include <Catest.h>
+#include "gtest/gtest.h"
 #include <ve/Helper/Math.hpp>
 
-CATEST_F(TempTest, Temp)
+TEST(TempTest, Temp)
 {
     ASSERT_TRUE(true);
     float angle = ve::toRadians(0);
-    ASSERT_FEQ(angle, 0.f);
+    ASSERT_FLOAT_EQ(angle, 0.f);
 }
