@@ -74,3 +74,21 @@ TEST(DependencyTest, RetrieveWrongIndex)
     TypePtr retrieved = container.retrieveInstance<Type>(100);
     ASSERT_EQ(retrieved.get(), nullptr);
 }
+
+
+TypePtr makeType(ve::DependencyContainer &)
+{
+    return std::make_shared<Type>(20);
+}
+
+
+TEST(DependencyTest, RegisterAndCreateViaFunction)
+{
+    ve::DependencyContainer container;
+    container.registerFunction<Type>(&makeType);
+
+    TypePtr ptr = container.createInstance<Type>();
+
+    ASSERT_NE(ptr.get(), nullptr);
+    ASSERT_EQ(ptr->getValue(), 20);
+}
