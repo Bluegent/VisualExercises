@@ -15,6 +15,7 @@ set(CMAKE_CXX_STANDARD 17)
 
 add_subdirectory(SFML)
 add_subdirectory(VeLib)
+add_subdirectory(VeLibrary)
 add_subdirectory(VisualExercises)
 
 # Set the output directory for the test executable

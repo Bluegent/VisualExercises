@@ -23,7 +23,7 @@ target_include_directories(${PROJECT_NAME} INTERFACE include)
 include_directories(include)
 
 # Link the SFML libraries to your executable
-target_link_libraries(${PROJECT_NAME}  VeLib)
+target_link_libraries(${PROJECT_NAME}  VeLib VeLibrary)
 
 set_target_properties(${PROJECT_NAME}  PROPERTIES
     VS_DEBUGGER_COMMAND "${INSTALL_DIR}/${PROJECT_NAME}.exe"
