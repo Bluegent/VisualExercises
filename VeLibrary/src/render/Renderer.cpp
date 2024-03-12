@@ -1,34 +1,24 @@
 #include <ve/render/Renderer.hpp>
 #include <SFML/Window/Event.hpp>
 #include <chrono>
-#include <random>
 #include <thread>
 #include <iostream>
 
 namespace ve
 {
-    std::random_device rd;
-    std::mt19937 mt;
-    std::uniform_int_distribution<int32_t> dist(0, 255);
+  
 
-    void setRandomColor(sf::RectangleShape& rect)
-    {
-        uint8_t red = dist(mt);
-        uint8_t green = dist(mt);
-        uint8_t blue = dist(mt);
-
-        rect.setFillColor(sf::Color(red, green, blue));
-    }
 
     Renderer::Renderer(const sf::VideoMode& mode, const std::string& name, int64_t frameMaxDuration)
         : _mode{mode}
         , _window(_mode, name)
-        , _rect(sf::Vector2f(50.f, 50.f))
-        , _rectPos(0.f, 0.f)
-        , _rectVelocity(3.f,3.f)
+       // , _rect(sf::Vector2f(50.f, 50.f))
+       // , _rectPos(0.f, 0.f)
+       // , _rectVelocity(3.f,3.f)
         , _frameMaxDuration{frameMaxDuration}
+        , _lastUpdate(std::chrono::steady_clock::now())
     {
-        _rect.setFillColor(sf::Color::White);
+       // _rect.setFillColor(sf::Color::White);
     }
 
     void Renderer::renderloop()
@@ -65,11 +55,26 @@ namespace ve
         }
     }
 
+    void Renderer::addEntity(const EntityPtr& entity)
+    {
+        _entities.push_back(entity);
+    }
+
+    void Renderer::addDrawable(const DrawablePtr& drawable)
+    {
+        _drawables.push_back(drawable);
+    }
+
     int64_t Renderer::draw()
     {
         std::chrono::time_point before = std::chrono::steady_clock::now();
         _window.clear();
-        _window.draw(_rect);
+
+        for (const auto& drawable : _drawables)
+        {
+            _window.draw(*drawable);
+        }
+
         _window.display();
         std::chrono::time_point after = std::chrono::steady_clock::now();
         return std::chrono::duration_cast<std::chrono::milliseconds>(after - before).count();
@@ -78,45 +83,15 @@ namespace ve
     int64_t Renderer::update()
     {
         std::chrono::time_point before = std::chrono::steady_clock::now();
-        
-        //adjust the position by adding the velocity to it
-        _rectPos += _rectVelocity;
-        //check for bottom margin
-        if (_rectPos.y + _rect.getSize().y >= _mode.height)
-        {
-            _rectVelocity.y *= -1.f; // we flip the y di_rection
-            _rectPos.y = _mode.height - _rect.getSize().y - 1.f; // position the _rectangle so we are sure it is no longer touching the bottom margin by moving it up by one pixel
-            setRandomColor(_rect);
-        }
-        //check for top margin
-        if (_rectPos.y <= 0)
-        {
-            _rectVelocity.y *= -1.f; // we flip the y di_rection
-            _rectPos.y = 1.f; // position the _rectangle so we are sure it is no longer touching the bottom margin by moving it down by one pixel
-            setRandomColor(_rect);
-        }
+        const int64_t deltaT = std::chrono::duration_cast<std::chrono::milliseconds>(before - _lastUpdate).count();
 
-        //check for left margin
-        if (_rectPos.x <= 0.f)
+        for (auto& entity : _entities)
         {
-            _rectVelocity.x *= -1.f; // we flip the x di_rection
-            _rectPos.x = 1.f; // position the _rectangle so we are sure it is no longer touching the bottom margin by moving it up by one pixel
-            setRandomColor(_rect);
+            entity->update(deltaT);
         }
-
-        //check for right margin
-        if (_rectPos.x + _rect.getSize().x >= _mode.width)
-        {
-            _rectVelocity.x *= -1.f; // we flip the x di_rection
-            _rectPos.x = _mode.width - _rect.getSize().x - 1.f; // position the _rectangle so we are sure it is no longer touching the bottom margin by moving it up by one pixel
-            setRandomColor(_rect);
-        }
-
-
-        //finally set the position
-        _rect.setPosition(_rectPos);
 
         std::chrono::time_point after = std::chrono::steady_clock::now();
+        _lastUpdate = after;
         return std::chrono::duration_cast<std::chrono::milliseconds>(after - before).count();
     }
 
