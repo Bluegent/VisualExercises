@@ -35,4 +35,11 @@ namespace ve
     {
         functions.emplace(name, function);
     }
+
+
+    DependencyContainer::~DependencyContainer()
+    {
+        instances.clear();
+        functions.clear();
+    }
 }

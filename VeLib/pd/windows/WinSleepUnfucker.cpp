@@ -13,9 +13,9 @@ namespace ve
 
     void WinSleepUnfucker::fix(const int32_t resolution)
     {
-        this->sleepResolution = sleepResolution;
+        this->sleepResolution = resolution;
         wasFixed = true;
-        timeBeginPeriod(this->sleepResolution);
+        timeBeginPeriod(sleepResolution);
     }
 
     void WinSleepUnfucker::unfix()
@@ -27,7 +27,6 @@ namespace ve
     WinSleepUnfucker::~WinSleepUnfucker()
     {
         unfix();
-        std::cout << "Unfucked!\n";
     }
 
 }

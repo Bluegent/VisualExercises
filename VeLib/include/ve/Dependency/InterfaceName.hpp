@@ -1,5 +1,5 @@
 #pragma once
-
+#include <iostream>
 
 namespace ve
 {
@@ -12,7 +12,6 @@ namespace ve
             static_assert(false, "Instantiating of undeclared InterfaceName is not allowed");
         }
     };
-
 }
 
 

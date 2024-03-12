@@ -11,7 +11,7 @@ endif()
 set(INSTALL_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../Install")
 set(CMAKE_INSTALL_PREFIX  "${INSTALL_DIR}")
 message("Install dir: ${INSTALL_DIR}")
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 
 add_subdirectory(SFML)
 add_subdirectory(VeLib)

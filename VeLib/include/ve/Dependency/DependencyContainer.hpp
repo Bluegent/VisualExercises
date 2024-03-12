@@ -14,6 +14,7 @@ namespace ve
     using CreateFunc = std::function<InterfacePtr(DependencyContainer&)>;
     using CreateFuncs = std::unordered_map<std::string, CreateFunc>;
 
+
     class DependencyContainer
     {
     private:
@@ -24,6 +25,7 @@ namespace ve
         InterfacePtr get(const std::string& name, const size_t index = 0);
         InterfacePtr create(const std::string& name);
         void registerFunc(const std::string& name, const CreateFunc& function);
+
 
     public:
         template <typename Type>
@@ -40,6 +42,7 @@ namespace ve
 
         template <typename Type>
         std::shared_ptr<Type> retrieveOrCreate(const size_t index = 0);
+        ~DependencyContainer();
 
     };
 

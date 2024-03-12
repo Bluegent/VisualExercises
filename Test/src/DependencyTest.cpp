@@ -7,11 +7,19 @@ class Type : public ve::Interface
 {
 private:
     int32_t value;
+    bool& destructed;
 public:
-    Type(const int32_t value) : value{ value } {}
+    Type(const int32_t value, bool & destructed) : value{ value } , destructed{destructed}
+    {
+        destructed = false; 
+    }
     int getValue()
     {
         return value;
+    }
+    ~Type()
+    {
+        destructed = true;
     }
 };
 using TypePtr = std::shared_ptr<Type>;
@@ -26,6 +34,7 @@ TEST(DependencyTest, InterfaceName)
 
 TEST(DependencyTest, RetrieveNull)
 {
+    bool temp = false;
     ve::DependencyContainer container;
     TypePtr inital = container.retrieveInstance<Type>();
     ASSERT_EQ(inital.get(), nullptr);
@@ -37,7 +46,8 @@ TEST(DependencyTest, RetrieveReal)
     ve::DependencyContainer container;
 
     int32_t realValue = 12;
-    TypePtr real = std::make_shared<Type>(realValue);
+    bool temp = false;
+    TypePtr real = std::make_shared<Type>(realValue, temp);
 
     container.registerInstance<Type>(real);
 
@@ -49,11 +59,11 @@ TEST(DependencyTest, RetrieveReal)
 TEST(DependencyTest, RetrieveRealIndex2)
 {
     ve::DependencyContainer container;
-
+    bool temp = false;
     int32_t realValue = 12;
     int32_t real2Value = 42;
-    TypePtr real = std::make_shared<Type>(realValue);
-    TypePtr real2 = std::make_shared<Type>(real2Value);
+    TypePtr real = std::make_shared<Type>(realValue,temp);
+    TypePtr real2 = std::make_shared<Type>(real2Value,temp);
     container.registerInstance<Type>(real);
     container.registerInstance<Type>(real2);
 
@@ -67,7 +77,8 @@ TEST(DependencyTest, RetrieveWrongIndex)
     ve::DependencyContainer container;
 
     int32_t realValue = 12;
-    TypePtr real = std::make_shared<Type>(realValue);
+    bool temp = false;
+    TypePtr real = std::make_shared<Type>(realValue,temp);
 
     container.registerInstance<Type>(real);
 
@@ -78,7 +89,8 @@ TEST(DependencyTest, RetrieveWrongIndex)
 
 TypePtr makeType(ve::DependencyContainer &)
 {
-    return std::make_shared<Type>(20);
+    static bool temp = false;
+    return std::make_shared<Type>(20,temp);
 }
 
 
@@ -91,4 +103,18 @@ TEST(DependencyTest, RegisterAndCreateViaFunction)
 
     ASSERT_NE(ptr.get(), nullptr);
     ASSERT_EQ(ptr->getValue(), 20);
+}
+
+
+TEST(DependencyTest, InstancesAreDestructed)
+{
+    bool temp = false;
+    {
+        ve::DependencyContainer container;
+
+        TypePtr real = std::make_shared<Type>(23, temp);
+        container.registerInstance<Type>(real);
+        ASSERT_FALSE(temp);
+    }
+    ASSERT_TRUE(temp);
 }
